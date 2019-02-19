@@ -8,6 +8,10 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_library(async SHARED async.cpp)
 
+target_link_libraries(async
+	${CMAKE_THREAD_LIBS_INIT}
+)
+
 set_target_properties(async PROPERTIES VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
 set_target_properties(async PROPERTIES PUBLIC_HEADER async.h)
 
