@@ -249,10 +249,21 @@ class FileOutput : public BulkManager::Observer {
 			auto m = q.front();
 			q.pop();
 			lk.unlock();
-			std::ofstream file("bulk_"
+			const string file_name = "bulk_"
 					+ stat.name + "_"
-					+ std::to_string(std::time(0))
-					+ ".log");
+					+ std::to_string(std::time(0));
+			auto exists = [] (const string fname) -> bool {
+				std::ifstream infile(fname + ".log");
+				return infile.good();
+			};
+			const string unique_fname = [&] () -> string {
+				string fname = file_name;
+				int name_try(0);
+				while (exists(fname))
+					fname = file_name + "_" + std::to_string(++name_try);
+				return fname + ".log";
+			} ();
+			std::ofstream file(unique_fname);
 			for (const auto &item : m) {
 				file << item << std::endl;
 				++stat.cmd_count;
