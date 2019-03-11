@@ -65,6 +65,8 @@ public:
 	void Subscribe(ObsPtr &obs) { m_subs.push_back(obs->GetPtr()); }
 
 	void NotifyLast() {
+		if (!m_current_line.empty())
+			Notify(m_current_line);
 		for (const auto &s : m_subs)
 			s->UpdateLast();
 	}
